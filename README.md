@@ -71,7 +71,7 @@ It is especially useful for:
 Clone the repository:
 
 ``` bash
-git clone https://github.com/your-username/taskflow-kanban-react.git
+git clone https://github.com/AvilaJoseph/taskflow-kanban-react
 cd taskflow-kanban-react
 ```
 
