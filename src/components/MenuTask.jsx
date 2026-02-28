@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { Folder, Smartphone, Plus, Clock, Type } from "lucide-react"
 
-export function MenuTask() {
+export function MenuTask({onOpen}) {
   const [visible, setVisible] = useState(true)
   const timeoutRef = useRef(null)
 
@@ -15,7 +15,7 @@ export function MenuTask() {
 
       timeoutRef.current = setTimeout(() => {
         setVisible(false)
-      }, 2000)
+      }, 1000)
     }
 
     window.addEventListener("mousemove", resetTimer)
@@ -47,7 +47,7 @@ export function MenuTask() {
     >
       <button className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm"><Folder size={18} className="text-gray-500" /></button>
       <button className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm"><Smartphone size={18} className="text-gray-500" /></button>
-      <button className="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white shadow-md"><Plus size={20} /></button>
+      <button onClick={onOpen} className="w-12 h-12 flex items-center justify-center rounded-full bg-black text-white shadow-md"><Plus size={20} /></button>
       <button className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm"><Clock size={18} className="text-gray-500" /></button>
       <button className="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm"><Type size={18} className="text-gray-500" /></button>
     </div>
