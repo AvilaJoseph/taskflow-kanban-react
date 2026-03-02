@@ -3,11 +3,15 @@ import { useState } from 'react'
 import { projectColors } from '../constants/projectColors'
 import { projectStates } from '../constants/projectState'
 
-export function ModalAdd({ onClose, dispatch }) {
+export function ModalAdd({ onClose, dispatch, projects }) {
     const [view, setView] = useState(null)
     const [color, setColor] = useState(projectColors[0])
     const [state, setState] = useState(projectStates[0])
     const [projectName, setProjectName] = useState("")
+    const [projectId, setProjectId] = useState("")
+    const [taskTitle, setTaskTitle] = useState("")
+    const [taskDescription, setTaskDescription] = useState("")
+    const [taskState, setTaskState] = useState(projectStates[0].value)
 
     function handleAddProject() {
         if (!projectName.trim()) return
@@ -24,6 +28,33 @@ export function ModalAdd({ onClose, dispatch }) {
             payload: newProject
         })
         setProjectName("")
+        onClose()
+    }
+
+    function handleAddTask() {
+        if (!projectId || !taskTitle.trim()) return
+
+        const newTask = {
+            id: Date.now(),
+            title: taskTitle,
+            description: taskDescription,
+            status: taskState,
+            createdAt: new Date().toISOString().split("T")[0]
+        }
+
+        dispatch({
+            type: "ADD_TASK",
+            payload: {
+                projectId: Number(projectId),
+                task: newTask
+            }
+        })
+
+        setProjectId("")
+        setTaskTitle("")
+        setTaskDescription("")
+        setTaskState(projectStates[0].value)
+
         onClose()
     }
     return (
@@ -83,7 +114,7 @@ export function ModalAdd({ onClose, dispatch }) {
                                             key={c}
                                             type="button"
                                             onClick={() => setColor(c)}
-                                            className={`w-6 h-6 rounded-md ${c} border-2 ${color === c ? "border-black" : "border-transparent"}`}/>
+                                            className={`w-6 h-6 rounded-md ${c} border-2 ${color === c ? "border-black" : "border-transparent"}`} />
                                     ))}
                                 </div>
                             </div>
@@ -110,23 +141,57 @@ export function ModalAdd({ onClose, dispatch }) {
                         <div className='flex-col mt-4'>
                             <div className='mt-4'>
                                 <div className="flex items-center gap-2 w-full"><h3 className="text-sm font-base text-gray-400">Select Project</h3></div>
-                                
+                                <select
+                                    value={projectId}
+                                    onChange={(e) => setProjectId(e.target.value)}
+                                    className='mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition'
+                                >
+                                    <option value="">Select a project</option>
+                                    {projects.map((project) => (
+                                        <option key={project.id} value={project.id}>
+                                            {project.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className='mt-4'>
                                 <h3 className='text-sm font-base text-gray-400'>Title Task</h3>
-                                <input type="text" placeholder="Enter title task" className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition" />
+                                <input
+                                    value={taskTitle}
+                                    onChange={(e) => setTaskTitle(e.target.value)}
+                                    type="text"
+                                    placeholder="Enter title task"
+                                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition"
+                                />
                             </div>
                             <div className='mt-4'>
                                 <div className="flex items-center gap-2 w-full"><h3 className="text-sm font-base text-gray-400">Status Task</h3></div>
-                                <select name="" id="" className='mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition'>
+                                <select
+                                    value={taskState}
+                                    onChange={(e) => setTaskState(e.target.value)}
+                                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition"
+                                >
                                     {projectStates.map((c) => (
-                                        <option key={c.value} value={c.value}>{c.name}</option>
+                                        <option key={c.value} value={c.value}>
+                                            {c.name}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
                             <div className='mt-4'>
                                 <h3 className='text-sm font-base text-gray-400'>Description Task</h3>
-                                <textarea placeholder="Enter task description" rows={4} className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 resize-none focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition" />
+                                <textarea
+                                    value={taskDescription}
+                                    onChange={(e) => setTaskDescription(e.target.value)}
+                                    rows={4}
+                                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-white placeholder:text-gray-400 focus:outline-none focus:ring-0.5 focus:ring-black/20 focus:border-black/30 transition"
+                                />
+                            </div>
+                            <div className='mt-4'><button
+                                onClick={handleAddTask}
+                                className="w-full bg-black text-white py-2 rounded-lg text-sm mt-4">
+                                Create Task
+                            </button>
                             </div>
                         </div>
                     </div>

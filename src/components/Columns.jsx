@@ -2,6 +2,7 @@ import { Column } from "./Column";
 
 export function Columns({
   projects,
+  dispatch,
   setActiveModal,
   activeTaskMenu,
   setActiveTaskMenu,
@@ -14,6 +15,7 @@ export function Columns({
         <Column
           key={project.id}
           project={project}
+          dispatch={dispatch}
           setActiveModal={setActiveModal}
           activeTaskMenu={activeTaskMenu}
           setActiveTaskMenu={setActiveTaskMenu}
